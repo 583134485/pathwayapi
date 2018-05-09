@@ -10,6 +10,8 @@ namespace Gdc.Apps.Pathway.WebApi.Controllers
     public class ValuesController : ApiController
     {
         // GET api/values
+        [HttpGet]
+        [ActionName("listall")]
         public IEnumerable<string> Get()
         {
             return new string[] { "value1", "value2" };
