@@ -101,6 +101,12 @@ namespace Gdc.Apps.Pathway.WebApi.Controllers
 
             return Ok(manager);
         }
+        [HttpPost]
+        [ActionName("CheckManagerExist")]
+        public bool CheckMangerExist(Manager manager)
+        {
+            return db.Managers.Count(e => e.Name == manager.Name) > 0;
+        }
 
         protected override void Dispose(bool disposing)
         {

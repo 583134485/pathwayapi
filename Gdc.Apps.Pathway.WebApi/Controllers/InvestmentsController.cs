@@ -100,10 +100,16 @@ namespace Gdc.Apps.Pathway.WebApi.Controllers
         }
 
         // DELETE: api/Investments/5
+        [HttpPost]
+        [ActionName("DeleteInvestment")]
         [ResponseType(typeof(Investment))]
-        public async Task<IHttpActionResult> DeleteInvestment(int id)
+        public async Task<IHttpActionResult> DeleteInvestment(Investment investmentpara)
         {
-            Investment investment = await db.Investments.FindAsync(id);
+            if (investmentpara.Id == null||string.IsNullOrEmpty(investmentpara.Id.ToString()))
+            {
+                return NotFound();
+            }
+            Investment investment = await db.Investments.FindAsync(investmentpara.Id);
             if (investment == null)
             {
                 return NotFound();
@@ -113,6 +119,22 @@ namespace Gdc.Apps.Pathway.WebApi.Controllers
             await db.SaveChangesAsync();
 
             return Ok(investment);
+        }
+
+        [HttpPost]
+        [ActionName("CheckInvestment")]
+        public bool CheckInvestment(Investment investment)
+        {
+         
+            int samename = db.Investments.Count(e => e.Name == investment.Name);
+
+            int sameManagerAndLeader = db.Investments.Where(data => data.Manager == investment.Manager).Count(s => s.Leader == investment.Leader);
+
+            if ((samename + sameManagerAndLeader) == 0)
+            {
+                return true;
+            }
+            return false;
         }
 
         protected override void Dispose(bool disposing)
